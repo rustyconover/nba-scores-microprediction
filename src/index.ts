@@ -13,6 +13,10 @@ async function getScores(): Promise<{
   games: Array<{
     gameId: string;
     isGameActivated: boolean;
+    period: {
+      isHalftime: boolean;
+      isEndOfPeriod: boolean;
+    };
     vTeam: {
       teamId: string;
       triCode: string;
@@ -35,7 +39,18 @@ async function calculateScoreDiff() {
 
   let value: number = 0;
 
+  if (active_games.length === 0) {
+    return;
+  }
+
   if (active_games.length > 0) {
+    const a = active_games[0];
+
+    if (a.period.isEndOfPeriod || a.period.isHalftime) {
+      // Stop updating.
+      return;
+    }
+
     value =
       parseInt(active_games[0].hTeam.score) -
       parseInt(active_games[0].vTeam.score);
