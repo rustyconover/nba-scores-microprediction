@@ -13,6 +13,7 @@ async function getScores(): Promise<{
   games: Array<{
     gameId: string;
     isGameActivated: boolean;
+    clock: string;
     period: {
       isHalftime: boolean;
       isEndOfPeriod: boolean;
@@ -48,6 +49,11 @@ async function calculateScoreDiff() {
 
     if (a.period.isEndOfPeriod || a.period.isHalftime) {
       // Stop updating.
+      return;
+    }
+
+    if (a.clock === "") {
+      // No clock stop updating.
       return;
     }
 
